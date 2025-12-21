@@ -1,0 +1,18 @@
+Most Frequent Word Problem Explaination
+=========================================
+
+Problem Statement:
+Given a paragraph of text, we want to find out which word appears most often. We should ignore punctuation and case differences (e.g., "Dog" and "dog" are the same).
+
+How it works:
+1. We take the input text and clean it up (lowercase it, remove symbols).
+2. We break the text into a list of individual words.
+3. We count how many times each word appears.
+4. We return the winner!
+
+Example:
+Input: "Apple apple, orange."
+1. Clean: "apple apple orange"
+2. Split: ["apple", "apple", "orange"]
+3. Count: apple=2, orange=1
+4. Result: ("apple", 2)
