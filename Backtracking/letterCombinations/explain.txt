@@ -1,0 +1,94 @@
+# Detailed Explanation: Letter Combinations of a Phone Number
+
+This document explains the logic and implementation of the solution for generating letter combinations from phone digits (LeetCode 17).
+
+## 1. Problem Overview
+The goal is to take a string of digits (e.g., "23") and return all possible letter combinations that the number could represent, based on the standard mapping found on telephone buttons.
+
+**Mapping:**
+- 2: "abc"
+- 3: "def"
+- 4: "ghi"
+- 5: "jkl"
+- 6: "mno"
+- 7: "pqrs"
+- 8: "tuv"
+- 9: "wxyz"
+
+## 2. Code Breakdown
+
+### Class Structure
+The solution is encapsulated in a class `Solution` with a method `letterCombinations`.
+
+### Input Handling
+```python
+if not digits:
+    return []
+```
+- **Edge Case**: If the input string is empty, the function immediately returns an empty list. This prevents processing logic from running on null input.
+
+### Validation Loop
+```python
+for d in digits:
+    if d not in phone:
+        print(f"Error: Digit '{d}' has no letters associated with it.")
+        return []
+```
+- **Safety Check**: Before starting the algorithm, the code iterates through every character in the input string.
+- If a character is not a valid key in the `phone` dictionary (e.g., '1', '0', or non-digits), it prints an error and returns an empty list.
+
+### The Backtracking Algorithm
+This is the core of the solution, implemented via the nested `backtrack` function.
+
+**Parameters:**
+- `index`: The current position in the `digits` string we are processing.
+- `path`: A list of characters representing the combination currently being built.
+
+**Base Case (Stopping Condition):**
+```python
+if len(path) == len(digits):
+    res.append("".join(path))
+    return
+```
+- When the length of our current `path` equals the length of the input `digits`, we have formed a complete combination.
+- We join the list of characters into a single string and add it to the result list `res`.
+
+**Recursive Step:**
+```python
+for char in phone[digits[index]]:
+    path.append(char)          # 1. Choose
+    backtrack(index + 1, path) # 2. Explore
+    path.pop()                 # 3. Un-choose (Backtrack)
+```
+1.  **Choose**: We iterate through the possible letters for the current digit (e.g., for '2', we iterate 'a', 'b', 'c'). We add the current letter to our `path`.
+2.  **Explore**: We recursively call `backtrack` for the *next* digit (index + 1).
+3.  **Backtrack**: After the recursive call returns (meaning we've finished exploring all combinations starting with that letter), we `pop()` the letter from `path`. This restores the state so we can try the next letter in the loop.
+
+## 3. Execution Trace Example
+**Input**: `"23"`
+
+1.  **Start**: `backtrack(0, [])`
+2.  **Digit '2' (options: a, b, c)**:
+    - **Loop 1**: Append 'a'. Path is `['a']`. Call `backtrack(1, ['a'])`.
+        - **Digit '3' (options: d, e, f)**:
+            - Append 'd'. Path is `['a', 'd']`. Length matches input. Add **"ad"** to results. Pop 'd'.
+            - Append 'e'. Path is `['a', 'e']`. Length matches input. Add **"ae"** to results. Pop 'e'.
+            - Append 'f'. Path is `['a', 'f']`. Length matches input. Add **"af"** to results. Pop 'f'.
+        - Function returns. Back in Digit '2' loop. Pop 'a'.
+    - **Loop 2**: Append 'b'. Path is `['b']`. Call `backtrack(1, ['b'])`.
+        - (Similar process generates "bd", "be", "bf")
+    - **Loop 3**: Append 'c'. Path is `['c']`. Call `backtrack(1, ['c'])`.
+        - (Similar process generates "cd", "ce", "cf")
+
+**Final Result**: `["ad", "ae", "af", "bd", "be", "bf", "cd", "ce", "cf"]`
+
+## 4. Complexity Analysis
+
+- **Time Complexity**: `O(4^N * N)`
+    - `N` is the length of digits.
+    - In the worst case (digits 7 and 9), each digit has 4 possible letters.
+    - We generate `4^N` combinations.
+    - Building each string takes `O(N)` time.
+- **Space Complexity**: `O(N)`
+    - This is for the recursion stack and the temporary `path` list.
+    - We do not count the space required for the output list in space complexity analysis usually, but the output list itself would be `O(4^N * N)`.
