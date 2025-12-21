@@ -1,0 +1,66 @@
+# Detailed Explanation: BFS Solution for Letter Combinations
+
+## 1. The Strategy: Iterative Expansion
+Instead of using recursion (calling a function inside itself), this solution uses a **Loop** and a **Queue**.
+
+Think of it like a factory assembly line:
+1.  **Initial State**: You have one empty box on the conveyor belt.
+2.  **Station 1 (Digit '2')**:
+    - The worker picks up the empty box.
+    - He makes 3 copies of it.
+    - He puts 'a' in the first, 'b' in the second, 'c' in the third.
+    - He puts these 3 boxes back on the belt.
+3.  **Station 2 (Digit '3')**:
+    - The next worker picks up the 'a' box. She makes 3 copies: 'ad', 'ae', 'af'. Puts them on the belt.
+    - She picks up the 'b' box. Makes 3 copies: 'bd', 'be', 'bf'. Puts them on the belt.
+    - And so on...
+
+By the end of the line, all boxes have complete combinations.
+
+## 2. Code Walkthrough
+
+```python
+queue = deque([""])
+```
+We start with a list containing just an empty string. This is our "seed".
+
+```python
+for d in digits:
+    current_level_size = len(queue)
+```
+We loop through each digit in the input (e.g., first '2', then '3').
+**Crucial Step**: `current_level_size = len(queue)`
+- We must record how many items are currently in the queue *before* we start adding new ones.
+- This ensures we only process the items from the *previous* level.
+
+```python
+    for _ in range(current_level_size):
+        current_string = queue.popleft()
+```
+We interpret `popleft()` as removing the item from the front of the line.
+
+```python
+        for char in phone[d]:
+            queue.append(current_string + char)
+```
+For every popped string (e.g., "a"), we append all possible new letters (e.g., "ad", "ae", "af") and push them to the **back** of the queue.
+
+## 3. Example Trace: Input "23"
+
+**Start**: Queue = `[""]`
+
+**Digit '2' Loop**:
+- `current_level_size` = 1.
+- Pop `""`.
+- Append 'a' -> Queue: `["a"]`
+- Append 'b' -> Queue: `["a", "b"]`
+- Append 'c' -> Queue: `["a", "b", "c"]`
+- Inner loop finishes.
+
+**Digit '3' Loop**:
+- `current_level_size` = 3 (items are "a", "b", "c").
+- **Iter 1**: Pop `"a"`. Append "ad", "ae", "af". -> Queue: `["b", "c", "ad", "ae", "af"]`
+- **Iter 2**: Pop `"b"`. Append "bd", "be", "bf". -> Queue: `["c", "ad", "ae", "af", "bd", "be", "bf"]`
+- **Iter 3**: Pop `"c"`. Append "cd", "ce", "cf". -> Queue: `["ad", "ae", "af", "bd", "be", "bf", "cd", "ce", "cf"]`
+
+**Result**: List conversion of final queue.
