@@ -1,0 +1,14 @@
+LRU Cache Explanation
+=====================
+
+The Logic:
+Imagine a stack of books on your desk.
+1. When you read a book (get/put), you pull it out and place it on the very TOP of the stack.
+2. If you buy a new book and your stack is too high (at capacity), you throw away the book at the very BOTTOM.
+
+That's an LRU Cache!
+- **Top of stack**: Most Recently Used (Head of Linked List).
+- **Bottom of stack**: Least Recently Used (Tail of Linked List).
+
+Why Doubly Linked List?
+- Because we need to pull a book from the *middle* of the stack and move it to the top instantly. A doubly linked list lets us join the gap left behind (`prev.next = next`) instantly.

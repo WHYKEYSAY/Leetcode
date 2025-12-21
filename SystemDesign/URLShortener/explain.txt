@@ -1,0 +1,17 @@
+URL Shortener Explanation
+=========================
+
+Problem:
+We want to take a very long website address (like "https://dataset.com/very/long/path/id=123") and turn it into something short and easy to share (like "http://tinyurl.com/Ab3").
+
+Analogy: Valet Parking
+1.  **Park (Encode)**: You give your car (Long URL) to the valet. The valet parks it in spot #500. He gives you a small ticket saying "500" (Short URL).
+2.  **Retrieve (Decode)**: You give the ticket "500" back to the valet. He knows exactly where to look to get your specific car back.
+
+How our code works:
+- We assign every URL a unique number ID (1, 2, 3...).
+- We turn that number into a code using letters and numbers (Base62) so it's shorter.
+    - ID 1 -> "1"
+    - ID 1000 -> "g8"
+    - ID 1000000 -> "4c92"
+- When someone clicks the short link, we reverse the math to get the ID back and find the original website.
